@@ -474,5 +474,10 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether use standart menu in public store or use Ajax to load menu
         /// </summary>
         public bool UseAjaxLoadMenu { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribute value display type when out of stock
+        /// </summary>
+        public AttributeValueOutOfStockDisplayType AttributeValueOutOfStockDisplayType { get; set; }
     }
 }

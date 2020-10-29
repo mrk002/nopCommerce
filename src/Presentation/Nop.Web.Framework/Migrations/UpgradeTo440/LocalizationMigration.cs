@@ -530,6 +530,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 	                    <br />
                     </p>",
                 ["Admin.Configuration.LanguagePackProgressMessage"] = "The localization pack downloaded when installing the store has been translated by {0}%. If you would like to contribute to localization, please visit our <a href=\"https://www.nopcommerce.com/translations\" target=\"_blank\">translations page.</a>",
+                
+                //#2909
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType"] = "Display type for attribute value when out of stock",
+                ["Admin.Configuration.Settings.Catalog.AttributeValueOutOfStockDisplayType.Hint"] = "Select the display type for attribute value when out of stock. Note that 'Allow only existing attribute combinations' should be activated on product.",
+                ["Products.ProductAttributes.DropdownList.DefaultItem"] = "Please select",
+                ["Products.ProductAttributes.NotAvailable"] = "Not available",
             }).Wait();
 
             // rename locales

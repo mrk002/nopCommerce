@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Seo;
@@ -71,6 +72,14 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
             {
                 seoSettings.HomepageDescription = "Your home page description";
                 settingService.SaveSettingAsync(seoSettings).Wait();
+            }
+
+            var catalogSettings = settingService.LoadSettingAsync<CatalogSettings>().Result;
+
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.AttributeValueOutOfStockDisplayType).Result)
+            {
+                catalogSettings.AttributeValueOutOfStockDisplayType = AttributeValueOutOfStockDisplayType.Disable;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
             }
         }
 
