@@ -135,19 +135,14 @@ namespace Nop.Services.Stores
         /// Get a value indicating whether a store mapping exists for an entity type
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
-        /// <param name="storeId">Store identifier</param>
         /// <returns>True if exists; otherwise false</returns>
-        public virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported
+        public virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
         {
-            if (storeId == 0)
-                return false;
-
             var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, storeId, entityName);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
 
             var query = from sm in _storeMappingRepository.Table
-                        where sm.StoreId == storeId &&
-                              sm.EntityName == entityName
+                        where sm.EntityName == entityName
                         select sm.StoreId;
 
             return await _staticCacheManager.GetAsync(key, query.Any);

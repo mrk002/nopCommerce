@@ -97,7 +97,7 @@ namespace Nop.Services.News
                 }
 
                 //Store mapping 
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<NewsItem>(storeId))
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<NewsItem>())
                     query = query.Where(_storeMappingService.ApplyStoreMapping<NewsItem>(storeId));
 
                 return query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);

@@ -103,7 +103,7 @@ namespace Nop.Services.Blogs
                 }
 
                 //Store mapping
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<BlogPost>(storeId))
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<BlogPost>())
                     query = query.Where(_storeMappingService.ApplyStoreMapping<BlogPost>(storeId));
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);

@@ -68,7 +68,7 @@ namespace Nop.Services.Topics
             query = query.Where(entry => entry.Published);
 
             //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>(storeId))
+            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>())
                 query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
 
             //apply ACL constraints

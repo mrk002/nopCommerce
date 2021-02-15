@@ -46,9 +46,8 @@ namespace Nop.Services.Stores
         /// Get a value indicating whether a store mapping exists for an entity type
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
-        /// <param name="storeId">Store identifier</param>
         /// <returns>True if exists; otherwise false</returns>
-        Task<bool> IsEntityMappingExistsAsync<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
+        Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)

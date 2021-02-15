@@ -79,7 +79,7 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
 
                 //filter by store
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Poll>(storeId))
+                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Poll>())
                     query = query.Where(_storeMappingService.ApplyStoreMapping<Poll>(storeId));
             }
 

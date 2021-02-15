@@ -78,7 +78,7 @@ namespace Nop.Services.Directory
 
                     //Store mapping
                     var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>(storeId))
+                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>())
                         query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
