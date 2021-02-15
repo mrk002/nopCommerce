@@ -3528,6 +3528,12 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber.Hint">
     <Value>The manufacturer's part number for this attribute combination.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity">
+    <Value>Minimum stock qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint">
+    <Value>If you have enabled 'Manage stock by attributes' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow">
     <Value>Notify admin for quantity below</Value>
   </LocaleResource>
@@ -4373,7 +4379,7 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.SupportPreviousNopcommerceVersions.Hint">
     <Value>Specify a value indicating whether we should support previous nopCommerce versions (it can slightly improve performance).</Value>
-  </LocaleResource>  
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Common.UserAgentStringsPath">
     <Value>User agent strings path</Value>
   </LocaleResource>
@@ -4387,7 +4393,7 @@
     <Value>Enable this setting to store TempData in the session state. By default the cookie-based TempData provider is used to store TempData in cookies.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.Description">
-      <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>]]></Value>
+    <Value><![CDATA[Configuration in ASP.NET Core is performed using a configuration provider from the external appsettings.json configuration file. These settings are used when the application is launched, so after editing them, the application will be restarted. You can find a detailed description of all configuration parameters in <a href=\"https://docs.nopcommerce.com/developer/tutorials/description-of-settings-from-appsettings-json-file-and-NopConfig-class.html\" target=\"_blank\">our documentation.</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.AppSettings.DistributedCache">
     <Value>Distributed cache configuration</Value>
@@ -9381,11 +9387,11 @@
   <LocaleResource Name="Admin.ConfigurationSteps.EmailAccountList.EmailAccounts2.Title">
     <Value>Email accounts</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ConfigurationSteps.NextStep">
-    <Value>Next</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.NextPage">
     <Value>Next page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ConfigurationSteps.NextStep">
+    <Value>Next</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ConfigurationSteps.PaymentMethods.Activate.Text">
     <Value><![CDATA[To activate a payment method click the <b>Edit</b> button, then tick the <b>Is active</b> checkbox and save the changes.]]></Value>
@@ -13716,99 +13722,6 @@
   <LocaleResource Name="Admin.Reports.LowStock.SearchPublished.UnpublishedOnly">
     <Value>Unpublished only</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary">
-    <Value>Sales summary</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.BillingCountry">
-    <Value>Billing country</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.BillingCountry.Hint">
-    <Value>Filter by order billing country.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Category">
-    <Value>Category</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Category.Hint">
-    <Value>Search in a specific category.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.EndDate">
-    <Value>End date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.EndDate.Hint">
-    <Value>The end date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Summary">
-    <Value>Summary</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.NumberOfOrders">
-    <Value>Number of orders</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Profit">
-    <Value>Profit</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Shipping">
-    <Value>Shipping</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Tax">
-    <Value>Tax</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.OrderTotal">
-    <Value>OrderTotal</Value>
-  </LocaleResource>  
-  <LocaleResource Name="Admin.Reports.SalesSummary.GroupBy">
-    <Value>Group by</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.GroupBy.Hint">
-    <Value>Grouping by time periods.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Day">
-    <Value>Day</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Week">
-    <Value>Week</Value>
-  </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Month">
-    <Value>Month</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Manufacturer">
-    <Value>Manufacturer</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Manufacturer.Hint">
-    <Value>Search in a specific manufacturer.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.OrderStatus">
-    <Value>Order status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.OrderStatus.Hint">
-    <Value>Search by a specific order status e.g. Complete.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.PaymentStatus">
-    <Value>Payment status</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.PaymentStatus.Hint">
-    <Value>Search by a specific payment status e.g. Paid.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Product">
-    <Value>Product</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Product.Hint">
-    <Value>Search by a specific product.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.RunReport">
-    <Value>Run report</Value>
-  </LocaleResource>  
-  <LocaleResource Name="Admin.Reports.SalesSummary.StartDate">
-    <Value>Start date</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.StartDate.Hint">
-    <Value>The start date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Store">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Reports.SalesSummary.Store.Hint">
-    <Value>Filter report by orders placed in a specific store.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.Bestsellers">
     <Value>Bestsellers</Value>
   </LocaleResource>
@@ -13970,6 +13883,90 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Reports.Sales.NeverSold.StartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary">
+    <Value>Sales summary</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.BillingCountry.Hint">
+    <Value>Filter by order billing country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Category.Hint">
+    <Value>Search in a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.NumberOfOrders">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.OrderTotal">
+    <Value>OrderTotal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Profit">
+    <Value>Profit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Summary">
+    <Value>Summary</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Fields.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.GroupBy">
+    <Value>Group by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.GroupBy.Hint">
+    <Value>Grouping by time periods.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Manufacturer.Hint">
+    <Value>Search in a specific manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Reports.SalesSummary.Store.Hint">
+    <Value>Filter report by orders placed in a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests">
     <Value>Return requests</Value>
@@ -16430,6 +16427,15 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Day">
+    <Value>Day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Services.Orders.GroupByOptions.Week">
+    <Value>Week</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Payments.RecurringPaymentType.Automatic">
     <Value>Automatic</Value>

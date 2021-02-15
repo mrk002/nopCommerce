@@ -507,6 +507,10 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
 
                 //#3950
                 ["Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExistsInCombination"] = "This attribute is already exists into combination: '{0}'.",
+
+                //#3353
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity"] = "Minimum stock qty",
+                ["Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.MinStockQuantity.Hint"] = "If you have enabled 'Manage stock by attributes' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity (e.g. Low stock report).",
             }).Wait();
 
             // rename locales
