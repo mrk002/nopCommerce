@@ -822,12 +822,6 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null)
         {
-            if (categoryIds?.Contains(0) == true)
-                categoryIds.Remove(0);
-
-            if (manufacturerIds?.Contains(0) == true)
-                manufacturerIds.Remove(0);
-
             //some databases don't support int.MaxValue
             if (pageSize == int.MaxValue)
                 pageSize = int.MaxValue - 1;
@@ -925,32 +919,44 @@ namespace Nop.Services.Catalog
                     select p;
             }
 
-            if (categoryIds?.Count > 0)
+            if (categoryIds is not null)
             {
-                var productCategoryQuery = 
-                    from pc in _productCategoryRepository.Table
-                    where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
-                        categoryIds.Contains(pc.CategoryId)
-                    select pc;
+                if (categoryIds.Contains(0))
+                    categoryIds.Remove(0);
 
-                productsQuery =
-                    from p in productsQuery
-                    where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
-                    select p;
+                if (categoryIds.Any())
+                {
+                    var productCategoryQuery =
+                        from pc in _productCategoryRepository.Table
+                        where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
+                            categoryIds.Contains(pc.CategoryId)
+                        select pc;
+
+                    productsQuery =
+                        from p in productsQuery
+                        where productCategoryQuery.Any(pc => pc.ProductId == p.Id)
+                        select p;
+                }
             }
 
-            if (manufacturerIds?.Count > 0)
+            if (manufacturerIds is not null)
             {
-                var productManufacturerQuery =
-                    from pm in _productManufacturerRepository.Table
-                    where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
-                        manufacturerIds.Contains(pm.ManufacturerId)
-                    select pm;
+                if (manufacturerIds.Contains(0))
+                    manufacturerIds.Remove(0);
 
-                productsQuery =
-                    from p in productsQuery
-                    where productManufacturerQuery.Any(pm => pm.ProductId == p.Id)
-                    select p;
+                if (manufacturerIds.Any())
+                {
+                    var productManufacturerQuery =
+                        from pm in _productManufacturerRepository.Table
+                        where (!excludeFeaturedProducts || !pm.IsFeaturedProduct) &&
+                            manufacturerIds.Contains(pm.ManufacturerId)
+                        select pm;
+
+                    productsQuery =
+                        from p in productsQuery
+                        where productManufacturerQuery.Any(pm => pm.ProductId == p.Id)
+                        select p;
+                }
             }
 
             if (productTagId > 0)

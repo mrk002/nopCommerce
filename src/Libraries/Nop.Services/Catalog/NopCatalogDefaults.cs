@@ -13,12 +13,12 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a default price range 'from'
         /// </summary>
-        public static decimal DefaultPriceRangeFrom = 0;
+        public static decimal DefaultPriceRangeFrom => 0;
 
         /// <summary>
         /// Gets a default price range 'to'
         /// </summary>
-        public static decimal DefaultPriceRangeTo = 10000;
+        public static decimal DefaultPriceRangeTo => 10000;
 
         #endregion
 
