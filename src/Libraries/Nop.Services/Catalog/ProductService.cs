@@ -972,7 +972,7 @@ namespace Nop.Services.Catalog
             {
                 productsQuery =
                     from p in productsQuery
-                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
+                    join psm in _productSpecificationAttributeRepository.Table.Where(psa => psa.AllowFiltering && filteredSpecs.Contains(psa.SpecificationAttributeOptionId)) on p.Id equals psm.ProductId
                     group p by p into groupedProduct
                     where groupedProduct.Count() == filteredSpecs.Count
                     select groupedProduct.Key;
