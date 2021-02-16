@@ -137,19 +137,14 @@ namespace Nop.Services.Security
         /// Get a value indicating whether any ACL records exist for entity type are related to customer roles
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
-        /// <param name="customerRoleIds">Customer's role identifiers</param>
         /// <returns>True if exist; otherwise false</returns>
-        public virtual async Task<bool> IsEntityAclMappingExistAsync<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
+        public virtual async Task<bool> IsEntityAclMappingExistAsync<TEntity>() where TEntity : BaseEntity, IAclSupported
         {
-            if (!customerRoleIds.Any())
-                return false;
-
             var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName, customerRoleIds);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopSecurityDefaults.EntityAclRecordExistsCacheKey, entityName);
 
             var query = from acl in _aclRecordRepository.Table
-                        where acl.EntityName == entityName &&
-                              customerRoleIds.Contains(acl.CustomerRoleId)
+                        where acl.EntityName == entityName
                         select acl;
 
             return await _staticCacheManager.GetAsync(key, query.Any);

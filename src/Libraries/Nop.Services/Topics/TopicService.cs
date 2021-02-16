@@ -72,7 +72,7 @@ namespace Nop.Services.Topics
                 query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
 
             //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>(customerRolesIds))
+            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>())
                 query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
 
             return query;

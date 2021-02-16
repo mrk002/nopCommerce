@@ -47,9 +47,8 @@ namespace Nop.Services.Security
         /// Get a value indicating whether any ACL records exist for entity type are related to customer roles
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
-        /// <param name="customerRoleIds">Customer's role identifiers</param>
         /// <returns>True if exist; otherwise false</returns>
-        Task<bool> IsEntityAclMappingExistAsync<TEntity>(int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
+        Task<bool> IsEntityAclMappingExistAsync<TEntity>() where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Find customer role identifiers with granted access
