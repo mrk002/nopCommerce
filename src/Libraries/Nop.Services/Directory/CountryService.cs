@@ -74,12 +74,16 @@ namespace Nop.Services.Directory
                 var countries = await _countryRepository.GetAllAsync(async query =>
                 {
                     if (!showHidden)
+                    {
                         query = query.Where(c => c.Published);
 
-                    //Store mapping
-                    var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>())
-                        query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
+                        //Store mapping
+                        if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>())
+                        {
+                            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+                            query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
+                        }
+                    }
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
                 });

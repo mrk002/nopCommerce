@@ -100,11 +100,11 @@ namespace Nop.Services.Blogs
                 {
                     query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
                     query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
-                }
 
-                //Store mapping
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<BlogPost>())
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<BlogPost>(storeId));
+                    //Store mapping
+                    if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<BlogPost>())
+                        query = query.Where(_storeMappingService.ApplyStoreMapping<BlogPost>(storeId));
+                }
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 
