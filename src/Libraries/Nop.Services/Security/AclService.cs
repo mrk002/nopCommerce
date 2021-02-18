@@ -86,12 +86,18 @@ namespace Nop.Services.Security
         /// <returns>Lambda expression</returns>
         public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
         {
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
+            if (customerRoleIds is null)
+                throw new ArgumentNullException(nameof(customerRoleIds));
+
             if (_catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
                 return query;
 
             return from entity in query
                    where !entity.SubjectToAcl || _aclRecordRepository.Table.Any(acl =>
-                        acl.EntityName == typeof(TEntity).Name && acl.EntityId == entity.Id)
+                        acl.EntityName == typeof(TEntity).Name && acl.EntityId == entity.Id && customerRoleIds.Contains(acl.CustomerRoleId))
                    select entity;
         }
 

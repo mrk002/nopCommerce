@@ -80,12 +80,15 @@ namespace Nop.Services.Stores
         /// <returns>Lambda expression</returns>
         public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
             if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
                 return query;
 
             return from entity in query
                    where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
-                         sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id)
+                         sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id && sm.StoreId == storeId)
                    select entity;
         }
 
