@@ -85,7 +85,6 @@ namespace Nop.Services.Catalog
                 return new List<ProductCategory>();
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             return await _productCategoryRepository.GetAllAsync(async query =>
             {
@@ -93,10 +92,11 @@ namespace Nop.Services.Catalog
                 {
                     var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
 
-                    //apply store mapping constraints            
+                    //apply store mapping constraints
                     categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, storeId);
 
                     //apply ACL constraints
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                     categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRolesIds);
 
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
@@ -230,18 +230,20 @@ namespace Nop.Services.Catalog
             var unsortedCategories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                {
                     query = query.Where(c => c.Published);
-
-                    //apply store mapping constraints            
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-
-                    //apply ACL constraints
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    query = await _aclService.ApplyAcl(query, await _customerService.GetCustomerRoleIdsAsync(customer));
-                }
                 else if (overridePublished.HasValue)
                     query = query.Where(c => c.Published == overridePublished.Value);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden)
+                {
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                }
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
                     query = query.Where(c => c.Name.Contains(categoryName));
@@ -267,19 +269,19 @@ namespace Nop.Services.Catalog
         public virtual async Task<IList<Category>> GetAllCategoriesByParentCategoryIdAsync(int parentCategoryId,
             bool showHidden = false)
         {
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var categories = await _categoryRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
                 {
                     query = query.Where(c => c.Published);
 
-                    //apply store mapping constraints            
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                    //apply store mapping constraints
+                    query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
 
                     //apply ACL constraints
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                     query = await _aclService.ApplyAcl(query, customerRolesIds);
                 }
 
@@ -287,7 +289,7 @@ namespace Nop.Services.Catalog
 
                 return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Id);
             }, cache => cache.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoriesByParentCategoryCacheKey,
-                parentCategoryId, showHidden, customer, storeId));
+                parentCategoryId, showHidden, customer, store));
 
             return categories;
         }
@@ -527,12 +529,14 @@ namespace Nop.Services.Catalog
             {
                 var categoriesQuery = _categoryRepository.Table.Where(c => c.Published);
 
-                //apply store mapping constraints            
-                categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, (await _storeContext.GetCurrentStoreAsync()).Id);
+                //apply store mapping constraints
+                var store = await _storeContext.GetCurrentStoreAsync();
+                categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, store.Id);
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, await _customerService.GetCustomerRoleIdsAsync(customer));
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRolesIds);
 
                 query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }
@@ -633,7 +637,7 @@ namespace Nop.Services.Catalog
         {
             return await _categoryRepository.GetByIdsAsync(categoryIds, includeDeleted: false);
         }
-        
+
         /// <summary>
         /// Returns a ProductCategory that has the specified values
         /// </summary>

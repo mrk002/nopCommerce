@@ -322,7 +322,7 @@ namespace Nop.Services.Catalog
 
             return stockMessage;
         }
-        
+
         /// <summary>
         /// Reserve the given quantity in the warehouses.
         /// </summary>
@@ -536,7 +536,7 @@ namespace Nop.Services.Catalog
         {
             await _productRepository.UpdateAsync(product);
         }
-        
+
         /// <summary>
         /// Gets featured products by a category identifier
         /// </summary>
@@ -562,7 +562,7 @@ namespace Nop.Services.Catalog
                                 pc.IsFeaturedProduct && categoryId == pc.CategoryId
                             select p;
 
-                //apply store mapping constraints            
+                //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
@@ -603,8 +603,8 @@ namespace Nop.Services.Catalog
                             where p.Published && !p.Deleted && p.VisibleIndividually &&
                                 pm.IsFeaturedProduct && manufacturerId == pm.ManufacturerId
                             select p;
-                
-                //apply store mapping constraints            
+
+                //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
@@ -630,12 +630,13 @@ namespace Nop.Services.Catalog
         {
             return await _productRepository.GetAllAsync(async query =>
             {
-                //apply store mapping constraints            
+                //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                query = await _aclService.ApplyAcl(query, await _customerService.GetCustomerRoleIdsAsync(customer));
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                query = await _aclService.ApplyAcl(query, customerRolesIds);
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
@@ -659,15 +660,14 @@ namespace Nop.Services.Catalog
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
 
-            var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-
             var query = _productRepository.Table.Where(p => p.Published && !p.Deleted && p.VisibleIndividually);
-            
-            //apply store mapping constraints            
+
+            //apply store mapping constraints
             query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
             //apply ACL constraints
+            var customer = await _workContext.GetCurrentCustomerAsync();
+            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             query = await _aclService.ApplyAcl(query, customerRolesIds);
 
             //category filtering
@@ -830,18 +830,20 @@ namespace Nop.Services.Catalog
             var productsQuery = _productRepository.Table;
 
             if (!showHidden)
-            {                
                 productsQuery = productsQuery.Where(p => p.Published);
-                
-                //apply store mapping constraints            
-                productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
-
-                //apply ACL constraints
-                var customer = await _workContext.GetCurrentCustomerAsync();
-                productsQuery = await _aclService.ApplyAcl(productsQuery, await _customerService.GetCustomerRoleIdsAsync(customer));
-            }
             else if (overridePublished.HasValue)
                 productsQuery = productsQuery.Where(p => p.Published == overridePublished.Value);
+
+            //apply store mapping constraints
+            productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
+
+            //apply ACL constraints
+            if (!showHidden)
+            {
+                var customer = await _workContext.GetCurrentCustomerAsync();
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                productsQuery = await _aclService.ApplyAcl(productsQuery, customerRolesIds);
+            }
 
             productsQuery =
                 from p in productsQuery
@@ -936,7 +938,7 @@ namespace Nop.Services.Catalog
 
             if (categoryIds?.Count > 0)
             {
-                var productCategoryQuery = 
+                var productCategoryQuery =
                     from pc in _productCategoryRepository.Table
                     where (!excludeFeaturedProducts || !pc.IsFeaturedProduct) &&
                         categoryIds.Contains(pc.CategoryId)
@@ -1668,7 +1670,7 @@ namespace Nop.Services.Catalog
                 }
             }
         }
-        
+
         /// <summary>
         /// Book the reserved quantity
         /// </summary>
@@ -1689,7 +1691,7 @@ namespace Nop.Services.Catalog
                 return;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                
+
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == warehouseId);
             if (pwi == null)
                 return;
@@ -1723,7 +1725,7 @@ namespace Nop.Services.Catalog
                 return 0;
 
             var pwi = await _productWarehouseInventoryRepository.Table
-                
+
                 .FirstOrDefaultAsync(wi => wi.ProductId == product.Id && wi.WarehouseId == shipmentItem.WarehouseId);
             if (pwi == null)
                 return 0;
@@ -1866,7 +1868,7 @@ namespace Nop.Services.Catalog
         {
             await _crossSellProductRepository.InsertAsync(crossSellProduct);
         }
-        
+
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -2160,12 +2162,13 @@ namespace Nop.Services.Catalog
                 {
                     var productsQuery = _productRepository.Table.Where(p => p.Published);
 
-                    //apply store mapping constraints            
+                    //apply store mapping constraints
                     productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
 
                     //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    productsQuery = await _aclService.ApplyAcl(productsQuery, await _customerService.GetCustomerRoleIdsAsync(customer));
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRolesIds);
 
                     query = query.Where(review => productsQuery.Any(product => product.Id == review.ProductId));
                 }
@@ -2249,7 +2252,7 @@ namespace Nop.Services.Catalog
         {
             await _productReviewRepository.DeleteAsync(productReviews);
         }
-        
+
         /// <summary>
         /// Sets or create a product review helpfulness record
         /// </summary>
@@ -2283,7 +2286,7 @@ namespace Nop.Services.Catalog
                 await _productReviewHelpfulnessRepository.UpdateAsync(prh);
             }
         }
-        
+
         /// <summary>
         /// Updates a product review
         /// </summary>

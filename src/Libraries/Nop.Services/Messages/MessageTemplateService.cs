@@ -126,7 +126,7 @@ namespace Nop.Services.Messages
         {
             return await _messageTemplateRepository.GetAllAsync(async query =>
             {
-                //store mapping
+                //apply store mapping constraints
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 return query.OrderBy(t => t.Name);

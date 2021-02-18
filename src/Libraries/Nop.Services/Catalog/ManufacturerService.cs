@@ -123,18 +123,20 @@ namespace Nop.Services.Catalog
             return await _manufacturerRepository.GetAllPagedAsync(async query =>
             {
                 if (!showHidden)
-                {
                     query = query.Where(m => m.Published);
-
-                    //apply store mapping constraints            
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
-
-                    //apply ACL constraints
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    query = await _aclService.ApplyAcl(query, await _customerService.GetCustomerRoleIdsAsync(customer));
-                }
                 else if (overridePublished.HasValue)
                     query = query.Where(m => m.Published == overridePublished.Value);
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden)
+                {
+                    var customer = await _workContext.GetCurrentCustomerAsync();
+                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                }
 
                 query = query.Where(m => !m.Deleted);
 
@@ -265,14 +267,16 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var manufacturersQuery =_manufacturerRepository.Table.Where(m => m.Published);
+                var manufacturersQuery = _manufacturerRepository.Table.Where(m => m.Published);
 
-                //apply store mapping constraints            
-                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, (await _storeContext.GetCurrentStoreAsync()).Id);
+                //apply store mapping constraints
+                var store = await _storeContext.GetCurrentStoreAsync();
+                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, await _customerService.GetCustomerRoleIdsAsync(customer));
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customerRolesIds);
 
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
@@ -292,12 +296,11 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
+            var store = await _storeContext.GetCurrentStoreAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             var key = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customer, storeId);
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.ProductManufacturersByProductCacheKey, productId, showHidden, customer, store);
 
             var query = from pm in _productManufacturerRepository.Table
                         join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
@@ -307,13 +310,15 @@ namespace Nop.Services.Catalog
 
             if (!showHidden)
             {
-                var manufacturersQuery =_manufacturerRepository.Table.Where(m => m.Published);
+                var manufacturersQuery = _manufacturerRepository.Table.Where(m => m.Published);
 
-                //apply store mapping constraints            
-                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, storeId);
+                //apply store mapping constraints
+                manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
 
                 //apply ACL constraints
+                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
                 manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customerRolesIds);
+
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
 

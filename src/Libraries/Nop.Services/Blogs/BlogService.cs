@@ -100,10 +100,10 @@ namespace Nop.Services.Blogs
                 {
                     query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= DateTime.UtcNow);
                     query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= DateTime.UtcNow);
-
-                    //Store mapping
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
                 }
+
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
 

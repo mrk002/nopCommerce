@@ -260,7 +260,7 @@ namespace Nop.Services.Catalog
                 {
                     var productsQuery = _productRepository.Table.Where(p => p.Published);
 
-                    //apply store mapping constraints            
+                    //apply store mapping constraints
                     productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
 
                     //apply ACL constraints

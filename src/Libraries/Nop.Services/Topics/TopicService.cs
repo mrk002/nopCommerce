@@ -94,15 +94,14 @@ namespace Nop.Services.Topics
                 var query = _topicRepository.Table;
 
                 if (!showHidden)
-                {
                     query = query.Where(t => t.Published);
 
-                    //apply store mapping constraints            
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                    //apply ACL constraints
+                //apply ACL constraints
+                if (!showHidden)
                     query = await _aclService.ApplyAcl(query, customerRolesIds);
-                }
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -129,15 +128,14 @@ namespace Nop.Services.Topics
             return await _topicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                {
                     query = query.Where(t => t.Published);
-                    
-                    //apply store mapping constraints            
-                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
-                    //apply ACL constraints
+                //apply store mapping constraints
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                //apply ACL constraints
+                if (!showHidden && !ignoreAcl)
                     query = await _aclService.ApplyAcl(query, customerRolesIds);
-                }
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);

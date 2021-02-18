@@ -839,9 +839,8 @@ namespace Nop.Services.Orders
                         select p;
             }
 
-            //store mapping
-            if (!showHidden)
-                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+            //apply store mapping constraints
+            query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
             query = query.OrderBy(p => p.Name);
 
