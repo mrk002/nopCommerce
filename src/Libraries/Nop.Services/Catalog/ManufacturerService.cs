@@ -134,8 +134,7 @@ namespace Nop.Services.Catalog
                 if (!showHidden)
                 {
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    query = await _aclService.ApplyAcl(query, customerRoleIds);
+                    query = await _aclService.ApplyAcl(query, customer);
                 }
 
                 query = query.Where(m => !m.Deleted);
@@ -275,8 +274,7 @@ namespace Nop.Services.Catalog
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customerRoleIds);
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customer);
 
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }
@@ -316,8 +314,7 @@ namespace Nop.Services.Catalog
                 manufacturersQuery = await _storeMappingService.ApplyStoreMapping(manufacturersQuery, store.Id);
 
                 //apply ACL constraints
-                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customerRoleIds);
+                manufacturersQuery = await _aclService.ApplyAcl(manufacturersQuery, customer);
 
                 query = query.Where(pm => manufacturersQuery.Any(m => m.Id == pm.ManufacturerId));
             }

@@ -635,8 +635,7 @@ namespace Nop.Services.Catalog
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                query = await _aclService.ApplyAcl(query, customerRoleIds);
+                query = await _aclService.ApplyAcl(query, customer);
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
@@ -841,8 +840,7 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
+                productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
             }
 
             productsQuery =
@@ -2167,8 +2165,7 @@ namespace Nop.Services.Catalog
 
                     //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customer);
 
                     query = query.Where(review => productsQuery.Any(product => product.Id == review.ProductId));
                 }

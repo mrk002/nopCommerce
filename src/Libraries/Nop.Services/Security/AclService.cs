@@ -81,6 +81,25 @@ namespace Nop.Services.Security
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="query">Query to filter</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Lambda expression</returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer) where TEntity : BaseEntity, IAclSupported
+        {
+            if (query is null)
+                throw new ArgumentNullException(nameof(query));
+
+            if (customer is null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            return await ApplyAcl(query, customerRoleIds);
+        }
+
+        /// <summary>
+        /// Get an expression predicate to apply the ACL
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
+        /// <param name="query">Query to filter</param>
         /// <param name="customerRoleIds">Identifiers of customer's roles</param>
         /// <returns>Lambda expression</returns>
         public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
