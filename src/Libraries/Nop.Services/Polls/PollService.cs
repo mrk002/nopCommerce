@@ -78,9 +78,8 @@ namespace Nop.Services.Polls
                 query = query.Where(poll => !poll.StartDateUtc.HasValue || poll.StartDateUtc <= utcNow);
                 query = query.Where(poll => !poll.EndDateUtc.HasValue || poll.EndDateUtc >= utcNow);
 
-                //filter by store
-                if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Poll>())
-                    query = query.Where(_storeMappingService.ApplyStoreMapping<Poll>(storeId));
+                //store mapping
+                query = await _storeMappingService.ApplyStoreMapping(query, storeId);
             }
 
             //load homepage polls only

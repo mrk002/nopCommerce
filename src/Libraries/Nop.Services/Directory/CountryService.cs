@@ -78,11 +78,8 @@ namespace Nop.Services.Directory
                         query = query.Where(c => c.Published);
 
                         //Store mapping
-                        if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<Country>())
-                        {
-                            var storeId = (await _storeContext.GetCurrentStoreAsync()).Id;
-                            query = query.Where(_storeMappingService.ApplyStoreMapping<Country>(storeId));
-                        }
+                        var store = await _storeContext.GetCurrentStoreAsync();
+                        query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
                     }
 
                     return query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);

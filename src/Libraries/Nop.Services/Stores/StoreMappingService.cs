@@ -51,6 +51,23 @@ namespace Nop.Services.Stores
             await _storeMappingRepository.InsertAsync(storeMapping);
         }
 
+        /// <summary>
+        /// Get a value indicating whether a store mapping exists for an entity type
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <returns>True if exists; otherwise false</returns>
+        protected virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
+        {
+            var entityName = typeof(TEntity).Name;
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
+
+            var query = from sm in _storeMappingRepository.Table
+                        where sm.EntityName == entityName
+                        select sm.StoreId;
+
+            return await _staticCacheManager.GetAsync(key, query.Any);
+        }
+
         #endregion
 
         #region Methods
@@ -61,12 +78,15 @@ namespace Nop.Services.Stores
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Lambda expression</returns>
-        public virtual Expression<Func<TEntity, bool>> ApplyStoreMapping<TEntity>(int storeId) where TEntity : BaseEntity, IStoreMappingSupported
+        public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
         {
-            return entity => !entity.LimitedToStores ||
-                (from storeMapping in _storeMappingRepository.Table
-                 where storeMapping.StoreId == storeId && storeMapping.EntityId == entity.Id && storeMapping.EntityName == typeof(TEntity).Name
-                 select storeMapping.EntityId).Any();
+            if (storeId == 0 || _catalogSettings.IgnoreStoreLimitations || !await IsEntityMappingExistsAsync<TEntity>())
+                return query;
+
+            return from entity in query
+                   where !entity.LimitedToStores || _storeMappingRepository.Table.Any(sm =>
+                         sm.EntityName == typeof(TEntity).Name && sm.EntityId == entity.Id)
+                   select entity;
         }
 
         /// <summary>
@@ -129,23 +149,6 @@ namespace Nop.Services.Stores
             };
 
             await InsertStoreMappingAsync(storeMapping);
-        }
-
-        /// <summary>
-        /// Get a value indicating whether a store mapping exists for an entity type
-        /// </summary>
-        /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
-        /// <returns>True if exists; otherwise false</returns>
-        public virtual async Task<bool> IsEntityMappingExistsAsync<TEntity>() where TEntity : BaseEntity, IStoreMappingSupported
-        {
-            var entityName = typeof(TEntity).Name;
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopStoreDefaults.StoreMappingExistsCacheKey, entityName);
-
-            var query = from sm in _storeMappingRepository.Table
-                        where sm.EntityName == entityName
-                        select sm.StoreId;
-
-            return await _staticCacheManager.GetAsync(key, query.Any);
         }
 
         /// <summary>

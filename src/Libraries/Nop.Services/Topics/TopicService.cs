@@ -51,35 +51,6 @@ namespace Nop.Services.Topics
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Filter hidden entries according to constraints if any
-        /// </summary>
-        /// <param name="query">Query to filter</param>
-        /// <param name="storeId">A store identifier</param>
-        /// <param name="customerRolesIds">Identifiers of customer's roles</param>
-        /// <returns>Filtered query</returns>
-        protected virtual async Task<IQueryable<TEntity>> FilterHiddenEntriesAsync<TEntity>(IQueryable<TEntity> query,
-            int storeId, int[] customerRolesIds)
-            where TEntity : Topic
-        {
-            //filter unpublished entries
-            query = query.Where(entry => entry.Published);
-
-            //apply store mapping constraints
-            if (!_catalogSettings.IgnoreStoreLimitations && await _storeMappingService.IsEntityMappingExistsAsync<TEntity>())
-                query = query.Where(_storeMappingService.ApplyStoreMapping<TEntity>(storeId));
-
-            //apply ACL constraints
-            if (!_catalogSettings.IgnoreAcl && await _aclService.IsEntityAclMappingExistAsync<TEntity>())
-                query = query.Where(_aclService.ApplyAcl<TEntity>(customerRolesIds));
-
-            return query;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -123,7 +94,15 @@ namespace Nop.Services.Topics
                 var query = _topicRepository.Table;
 
                 if (!showHidden)
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                {
+                    query = query.Where(t => t.Published);
+
+                    //apply store mapping constraints            
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                    //apply ACL constraints
+                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                }
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -150,7 +129,15 @@ namespace Nop.Services.Topics
             return await _topicRepository.GetAllAsync(async query =>
             {
                 if (!showHidden)
-                    query = await FilterHiddenEntriesAsync(query, storeId, customerRolesIds);
+                {
+                    query = query.Where(t => t.Published);
+                    
+                    //apply store mapping constraints            
+                    query = await _storeMappingService.ApplyStoreMapping(query, storeId);
+
+                    //apply ACL constraints
+                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                }
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);
