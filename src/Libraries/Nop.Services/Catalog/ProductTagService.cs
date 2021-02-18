@@ -248,9 +248,9 @@ namespace Nop.Services.Catalog
         public virtual async Task<Dictionary<int, int>> GetProductCountAsync(int storeId, bool showHidden = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRolesIds, showHidden);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ProductTagCountCacheKey, storeId, customerRoleIds, showHidden);
 
             return await _staticCacheManager.GetAsync(key, async () =>
             {
@@ -264,7 +264,7 @@ namespace Nop.Services.Catalog
                     productsQuery = await _storeMappingService.ApplyStoreMapping(productsQuery, storeId);
 
                     //apply ACL constraints
-                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRolesIds);
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
 
                     query = query.Where(pc => productsQuery.Any(p => !p.Deleted && pc.ProductId == p.Id));
                 }

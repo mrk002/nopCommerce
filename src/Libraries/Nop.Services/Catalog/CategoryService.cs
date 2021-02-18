@@ -96,8 +96,8 @@ namespace Nop.Services.Catalog
                     categoriesQuery = await _storeMappingService.ApplyStoreMapping(categoriesQuery, storeId);
 
                     //apply ACL constraints
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRolesIds);
+                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRoleIds);
 
                     query = query.Where(pc => categoriesQuery.Any(c => !c.Deleted && c.Id == pc.CategoryId));
                 }
@@ -241,8 +241,8 @@ namespace Nop.Services.Catalog
                 if (!showHidden)
                 {
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
                 }
 
                 if (!string.IsNullOrWhiteSpace(categoryName))
@@ -281,8 +281,8 @@ namespace Nop.Services.Catalog
                     query = await _storeMappingService.ApplyStoreMapping(query, store.Id);
 
                     //apply ACL constraints
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
                 }
 
                 query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);
@@ -535,8 +535,8 @@ namespace Nop.Services.Catalog
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRolesIds);
+                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                categoriesQuery = await _aclService.ApplyAcl(categoriesQuery, customerRoleIds);
 
                 query = query.Where(pc => categoriesQuery.Any(c => c.Id == pc.CategoryId));
             }

@@ -551,8 +551,8 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, customerRolesIds, storeId);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryFeaturedProductsIdsKey, categoryId, customerRoleIds, storeId);
 
             var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -566,7 +566,7 @@ namespace Nop.Services.Catalog
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
-                query = await _aclService.ApplyAcl(query, customerRolesIds);
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
@@ -593,8 +593,8 @@ namespace Nop.Services.Catalog
                 return featuredProducts;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, customerRolesIds, storeId);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopCatalogDefaults.ManufacturerFeaturedProductIdsKey, manufacturerId, customerRoleIds, storeId);
 
             var featuredProductIds = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -608,7 +608,7 @@ namespace Nop.Services.Catalog
                 query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                 //apply ACL constraints
-                query = await _aclService.ApplyAcl(query, customerRolesIds);
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 featuredProducts = query.ToList();
 
@@ -635,8 +635,8 @@ namespace Nop.Services.Catalog
 
                 //apply ACL constraints
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                query = await _aclService.ApplyAcl(query, customerRolesIds);
+                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 query = from p in query
                         where p.Published && p.VisibleIndividually && p.MarkAsNew && !p.Deleted &&
@@ -667,8 +667,8 @@ namespace Nop.Services.Catalog
 
             //apply ACL constraints
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-            query = await _aclService.ApplyAcl(query, customerRolesIds);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            query = await _aclService.ApplyAcl(query, customerRoleIds);
 
             //category filtering
             if (categoryIds != null && categoryIds.Any())
@@ -680,7 +680,7 @@ namespace Nop.Services.Catalog
             }
 
             var cacheKey = _staticCacheManager
-                .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRolesIds, storeId, categoryIds);
+                .PrepareKeyForDefaultCache(NopCatalogDefaults.CategoryProductsNumberCacheKey, customerRoleIds, storeId, categoryIds);
 
             //only distinct products
             return await _staticCacheManager.GetAsync(cacheKey, () => query.Select(p => p.Id).Count());
@@ -841,8 +841,8 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 var customer = await _workContext.GetCurrentCustomerAsync();
-                var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                productsQuery = await _aclService.ApplyAcl(productsQuery, customerRolesIds);
+                var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
             }
 
             productsQuery =
@@ -2167,8 +2167,8 @@ namespace Nop.Services.Catalog
 
                     //apply ACL constraints
                     var customer = await _workContext.GetCurrentCustomerAsync();
-                    var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
-                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRolesIds);
+                    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+                    productsQuery = await _aclService.ApplyAcl(productsQuery, customerRoleIds);
 
                     query = query.Where(review => productsQuery.Any(product => product.Id == review.ProductId));
                 }

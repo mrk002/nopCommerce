@@ -85,9 +85,9 @@ namespace Nop.Services.Topics
                 return null;
 
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRolesIds);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopTopicDefaults.TopicBySystemNameCacheKey, systemName, storeId, customerRoleIds);
 
             var topic = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -101,7 +101,7 @@ namespace Nop.Services.Topics
 
                 //apply ACL constraints
                 if (!showHidden)
-                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 return query.Where(t => t.SystemName == systemName)
                     .OrderBy(t => t.Id)
@@ -123,7 +123,7 @@ namespace Nop.Services.Topics
             bool ignoreAcl = false, bool showHidden = false, bool onlyIncludedInTopMenu = false)
         {
             var customer = await _workContext.GetCurrentCustomerAsync();
-            var customerRolesIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+            var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
 
             return await _topicRepository.GetAllAsync(async query =>
             {
@@ -135,7 +135,7 @@ namespace Nop.Services.Topics
 
                 //apply ACL constraints
                 if (!showHidden && !ignoreAcl)
-                    query = await _aclService.ApplyAcl(query, customerRolesIds);
+                    query = await _aclService.ApplyAcl(query, customerRoleIds);
 
                 if (onlyIncludedInTopMenu)
                     query = query.Where(t => t.IncludeInTopMenu);
@@ -145,7 +145,7 @@ namespace Nop.Services.Topics
             {
                 return ignoreAcl
                     ? cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllCacheKey, storeId, showHidden, onlyIncludedInTopMenu)
-                    : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, customerRolesIds);
+                    : cache.PrepareKeyForDefaultCache(NopTopicDefaults.TopicsAllWithACLCacheKey, storeId, showHidden, onlyIncludedInTopMenu, customerRoleIds);
             });
         }
 
