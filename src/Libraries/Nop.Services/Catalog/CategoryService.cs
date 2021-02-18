@@ -280,8 +280,7 @@ namespace Nop.Services.Catalog
                     query = await _storeMappingService.ApplyStoreMapping(query, storeId);
 
                     //apply ACL constraints
-                    var customer = await _workContext.GetCurrentCustomerAsync();
-                    query = await _aclService.ApplyAcl(query, await _customerService.GetCustomerRoleIdsAsync(customer));
+                    query = await _aclService.ApplyAcl(query, customerRolesIds);
                 }
 
                 query = query.Where(c => !c.Deleted && c.ParentCategoryId == parentCategoryId);

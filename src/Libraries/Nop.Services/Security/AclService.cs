@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -92,7 +91,7 @@ namespace Nop.Services.Security
             if (customerRoleIds is null)
                 throw new ArgumentNullException(nameof(customerRoleIds));
 
-            if (_catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
+            if (!customerRoleIds.Any() || _catalogSettings.IgnoreAcl || !await IsEntityAclMappingExistAsync<TEntity>())
                 return query;
 
             return from entity in query
