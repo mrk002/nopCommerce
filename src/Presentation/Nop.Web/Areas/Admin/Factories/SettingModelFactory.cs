@@ -34,7 +34,6 @@ using Nop.Services.Media;
 using Nop.Services.Stores;
 using Nop.Services.Themes;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Stores;
 using Nop.Web.Framework.Factories;
@@ -126,33 +125,7 @@ namespace Nop.Web.Areas.Admin.Factories
         #endregion
 
         #region Utilities
-
-        /// <summary>
-        /// Prepare address model
-        /// </summary>
-        /// <param name="model">Address model</param>
-        /// <param name="address">Address</param>
-        protected virtual async Task PrepareAddressModelAsync(AddressModel model, Address address)
-        {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
-
-            //set some of address fields as enabled and required
-            model.CountryEnabled = true;
-            model.StateProvinceEnabled = true;
-            model.CountyEnabled = true;
-            model.CityEnabled = true;
-            model.StreetAddressEnabled = true;
-            model.ZipPostalCodeEnabled = true;
-            model.ZipPostalCodeRequired = true;
-
-            //prepare available countries
-            await _baseAdminModelFactory.PrepareCountriesAsync(model.AvailableCountries);
-
-            //prepare available states
-            await _baseAdminModelFactory.PrepareStatesAndProvincesAsync(model.AvailableStates, model.CountryId);
-        }
-
+        
         /// <summary>
         /// Prepare store theme models
         /// </summary>
@@ -950,7 +923,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var originAddress = await _addressService.GetAddressByIdAsync(shippingSettings.ShippingOriginAddressId);
             if (originAddress != null)
                 model.ShippingOriginAddress = originAddress.ToModel(model.ShippingOriginAddress);
-            await PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.ShippingOriginAddress, originAddress);
 
             return model;
         }
@@ -1012,7 +985,7 @@ namespace Nop.Web.Areas.Admin.Factories
             var defaultAddress = await _addressService.GetAddressByIdAsync(taxSettings.DefaultTaxAddressId);
             if (defaultAddress != null)
                 model.DefaultTaxAddress = defaultAddress.ToModel(model.DefaultTaxAddress);
-            await PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
+            await _baseAdminModelFactory.PrepareAddressModelAsync(model.DefaultTaxAddress, defaultAddress);
 
             return model;
         }
