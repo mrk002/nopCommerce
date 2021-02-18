@@ -12,12 +12,12 @@ namespace Nop.Services.Stores
     public partial interface IStoreMappingService
     {
         /// <summary>
-        /// Get an expression predicate to apply a store mapping
+        /// Apply store mapping to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
         /// <param name="query">Query to filter</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Lambda expression</returns>
+        /// <returns>Filtered query</returns>
         Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId) where TEntity : BaseEntity, IStoreMappingSupported;
 
         /// <summary>

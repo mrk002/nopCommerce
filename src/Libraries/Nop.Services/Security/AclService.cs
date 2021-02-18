@@ -77,13 +77,14 @@ namespace Nop.Services.Security
         #region Methods
 
         /// <summary>
-        /// Get an expression predicate to apply the ACL
+        /// Apply ACL to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="query">Query to filter</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Lambda expression</returns>
-        public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer) where TEntity : BaseEntity, IAclSupported
+        /// <returns>Filtered query</returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer)
+            where TEntity : BaseEntity, IAclSupported
         {
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
@@ -96,13 +97,14 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
-        /// Get an expression predicate to apply the ACL
+        /// Apply ACL to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="query">Query to filter</param>
         /// <param name="customerRoleIds">Identifiers of customer's roles</param>
-        /// <returns>Lambda expression</returns>
-        public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported
+        /// <returns>Filtered query</returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds)
+            where TEntity : BaseEntity, IAclSupported
         {
             if (query is null)
                 throw new ArgumentNullException(nameof(query));

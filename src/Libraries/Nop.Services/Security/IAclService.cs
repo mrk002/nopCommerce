@@ -13,21 +13,21 @@ namespace Nop.Services.Security
     public partial interface IAclService
     {
         /// <summary>
-        /// Get an expression predicate to apply the ACL
+        /// Apply ACL to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="query">Query to filter</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Lambda expression</returns>
+        /// <returns>Filtered query</returns>
         Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, Customer customer) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>
-        /// Get an expression predicate to apply the ACL
+        /// Apply ACL to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports the ACL</typeparam>
         /// <param name="query">Query to filter</param>
         /// <param name="customerRoleIds">Identifiers of customer's roles</param>
-        /// <returns>Lambda expression</returns>
+        /// <returns>Filtered query</returns>
         Task<IQueryable<TEntity>> ApplyAcl<TEntity>(IQueryable<TEntity> query, int[] customerRoleIds) where TEntity : BaseEntity, IAclSupported;
 
         /// <summary>

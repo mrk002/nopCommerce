@@ -72,12 +72,14 @@ namespace Nop.Services.Stores
         #region Methods
 
         /// <summary>
-        /// Get an expression predicate to apply a store mapping
+        /// Apply store mapping to the passed query
         /// </summary>
         /// <typeparam name="TEntity">Type of entity that supports store mapping</typeparam>
+        /// <param name="query">Query to filter</param>
         /// <param name="storeId">Store identifier</param>
-        /// <returns>Lambda expression</returns>
-        public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId) where TEntity : BaseEntity, IStoreMappingSupported
+        /// <returns>Filtered query</returns>
+        public virtual async Task<IQueryable<TEntity>> ApplyStoreMapping<TEntity>(IQueryable<TEntity> query, int storeId)
+            where TEntity : BaseEntity, IStoreMappingSupported
         {
             if (query is null)
                 throw new ArgumentNullException(nameof(query));
