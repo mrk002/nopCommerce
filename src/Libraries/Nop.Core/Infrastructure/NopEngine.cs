@@ -24,11 +24,15 @@ namespace Nop.Core.Infrastructure
         /// Get IServiceProvider
         /// </summary>
         /// <returns>IServiceProvider</returns>
-        protected IServiceProvider GetServiceProvider()
+        protected IServiceProvider GetServiceProvider(IServiceScope scope = null)
         {
-            var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
-            var context = accessor?.HttpContext;
-            return context?.RequestServices ?? ServiceProvider;
+            if (scope == null)
+            {
+                var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+                var context = accessor?.HttpContext;
+                return context?.RequestServices ?? ServiceProvider;
+            }
+            return scope.ServiceProvider;
         }
 
         /// <summary>
@@ -177,6 +181,28 @@ namespace Nop.Core.Infrastructure
             //configure request pipeline
             foreach (var instance in instances)
                 instance.Configure(application);
+        }
+
+        /// <summary>
+        /// Resolve dependency in isolated scope
+        /// </summary>
+        /// <param name="scope">Scope</param>
+        /// <typeparam name="T">Type of resolved service</typeparam>
+        /// <returns>Resolved service</returns>
+        public T Resolve<T>(IServiceScope scope) where T : class
+        {
+            return (T)Resolve(typeof(T), scope);
+        }
+
+        /// <summary>
+        /// Resolve dependency in isolated scope
+        /// </summary>
+        /// <param name="type">Type of resolved service</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Resolved service</returns>
+        public object Resolve(Type type, IServiceScope scope)
+        {
+            return GetServiceProvider(scope)?.GetService(type);
         }
 
         /// <summary>

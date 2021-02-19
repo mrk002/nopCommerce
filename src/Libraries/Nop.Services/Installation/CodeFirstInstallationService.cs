@@ -675,7 +675,7 @@ namespace Nop.Services.Installation
 
             //we use different scope to prevent creating wrong settings in DI, because the settings data not exists yet
             using var scope = EngineContext.Current.Resolve<IServiceProvider>().CreateScope();
-            var importManager = scope.ServiceProvider.GetRequiredService<IImportManager>();
+            var importManager = EngineContext.Current.Resolve<IImportManager>(scope);
             foreach (var filePath in _fileProvider.EnumerateFiles(directoryPath, pattern))
             {
                 await using var stream = new FileStream(filePath, FileMode.Open);
