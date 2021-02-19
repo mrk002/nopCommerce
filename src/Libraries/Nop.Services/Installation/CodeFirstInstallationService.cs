@@ -3314,7 +3314,8 @@ namespace Nop.Services.Installation
                 CompleteOrderWhenDelivered = true,
                 CustomOrderNumberMask = "{ID}",
                 ExportWithProducts = true,
-                AllowAdminsToBuyCallForPriceProducts = true
+                AllowAdminsToBuyCallForPriceProducts = true,
+                OrderDitailsAddTotalsOnCustomerCurrency = false
             });
 
             await settingService.SaveSettingAsync(new SecuritySettings

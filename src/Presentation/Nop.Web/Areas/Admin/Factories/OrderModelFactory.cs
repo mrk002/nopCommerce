@@ -483,12 +483,42 @@ namespace Nop.Web.Areas.Admin.Factories
                 });
             }
 
+            if(primaryStoreCurrency.CurrencyCode != order.CustomerCurrencyCode)
+                await AddTotalsOnCustomerCurrency(model, order, languageId);
+
             //profit (hide for vendors)
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return;
 
             var profit = await _orderReportService.ProfitReportAsync(orderId: order.Id);
             model.Profit = await _priceFormatter.FormatPriceAsync(profit, true, false);
+        }
+
+        /// <summary>
+        /// Add costs in customer currency into order totals
+        /// </summary>
+        /// <param name="model">Order model</param>
+        /// <param name="order">Order</param>
+        /// <param name="languageId">Language ID</param>
+        /// <returns></returns>
+        protected virtual async Task AddTotalsOnCustomerCurrency(OrderModel model, Order order, int languageId)
+        {
+            if (!_orderSettings.OrderDitailsAddTotalsOnCustomerCurrency)
+                return;
+
+            //subtotal
+            model.OrderSubtotalInclTax += $" [{await _priceFormatter.FormatPriceAsync(order.OrderSubtotalInclTax * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, true)}]";
+            model.OrderSubtotalExclTax += $" [{await _priceFormatter.FormatPriceAsync(order.OrderSubtotalExclTax * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, false)}]";
+
+            //tax
+            model.Tax += $" [{await _priceFormatter.FormatPriceAsync(order.OrderTax * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, false)}]";
+
+            //total
+            model.OrderTotal += $" [{await _priceFormatter.FormatPriceAsync(order.OrderTotal * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, false)}]";
+
+            //shipping
+            model.OrderShippingInclTax += $" [{await _priceFormatter.FormatPriceAsync(order.OrderShippingInclTax * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, false)}]";
+            model.OrderShippingExclTax += $" [{await _priceFormatter.FormatPriceAsync(order.OrderShippingExclTax * order.CurrencyRate, true, order.CustomerCurrencyCode, languageId, false)}]";
         }
 
         /// <summary>
