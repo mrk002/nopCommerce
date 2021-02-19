@@ -524,5 +524,10 @@ namespace Nop.Core.Domain.Catalog
         /// Get or set a value indicating whether the manufacturer filtering is enabled on catalog pages
         /// </summary>
         public bool EnableManufacturerFiltering { get; set; }
+
+        /// <summary>
+        /// Get or set a value indicating whether the price range filtering is enabled on catalog pages
+        /// </summary>
+        public bool EnablePriceRangeFiltering { get; set; }
     }
 }

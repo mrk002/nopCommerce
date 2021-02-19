@@ -76,6 +76,12 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo440
                 settingService.SaveSettingAsync(catalogSettings).Wait();
             }
 
+            if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.EnablePriceRangeFiltering).Result)
+            {
+                catalogSettings.EnablePriceRangeFiltering = true;
+                settingService.SaveSettingAsync(catalogSettings).Wait();
+            }
+
             if (!settingService.SettingExistsAsync(catalogSettings, settings => settings.SearchPagePriceRangeFiltering).Result)
             {
                 catalogSettings.SearchPagePriceRangeFiltering = true;

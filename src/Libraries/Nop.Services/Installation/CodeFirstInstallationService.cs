@@ -3058,7 +3058,8 @@ namespace Nop.Services.Installation
                 CountDisplayedYearsDatePicker = 1,
                 UseAjaxLoadMenu = false,
                 UseAjaxCatalogProductsLoading = true,
-                EnableManufacturerFiltering = true
+                EnableManufacturerFiltering = true,
+                EnablePriceRangeFiltering = true
             });
 
             await settingService.SaveSettingAsync(new LocalizationSettings

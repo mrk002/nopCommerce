@@ -907,7 +907,7 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            if (category.PriceRangeFiltering)
+            if (_catalogSettings.EnablePriceRangeFiltering && category.PriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
@@ -1053,7 +1053,7 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            if (manufacturer.PriceRangeFiltering)
+            if (_catalogSettings.EnablePriceRangeFiltering && manufacturer.PriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
@@ -1290,7 +1290,7 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            if (vendor.PriceRangeFiltering)
+            if (_catalogSettings.EnablePriceRangeFiltering && vendor.PriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
@@ -1521,7 +1521,7 @@ namespace Nop.Web.Factories
 
             //price range
             PriceRangeModel selectedPriceRange = null;
-            if (_catalogSettings.ProductsByTagPriceRangeFiltering)
+            if (_catalogSettings.EnablePriceRangeFiltering && _catalogSettings.ProductsByTagPriceRangeFiltering)
             {
                 selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
@@ -1756,7 +1756,7 @@ namespace Nop.Web.Factories
 
                     //price range
                     PriceRangeModel selectedPriceRange = null;
-                    if (_catalogSettings.SearchPagePriceRangeFiltering)
+                    if (_catalogSettings.EnablePriceRangeFiltering && _catalogSettings.SearchPagePriceRangeFiltering)
                     {
                         selectedPriceRange = await GetConvertedPriceRangeAsync(command);
 
